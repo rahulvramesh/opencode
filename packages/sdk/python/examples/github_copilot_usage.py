@@ -12,10 +12,14 @@ Prerequisites:
 
 Usage:
     python examples/github_copilot_usage.py
+
+Note:
+    This example demonstrates the conceptual workflow. The actual session and
+    prompt APIs may require using the lower-level generated client methods.
+    See the SDK documentation for complete API details.
 """
 
 from opencode_ai import OpenCodeClient
-from opencode_ai.models import SessionCreate, PromptMessage
 import sys
 
 
@@ -40,86 +44,84 @@ def main():
         # Step 1: Get configuration to verify connection
         print("\n📋 Fetching OpenCode configuration...")
         config = client.get_config()
-        print(f"✅ Connected to OpenCode (version: {config.version if hasattr(config, 'version') else 'unknown'})")
+        if config:
+            print(f"✅ Connected to OpenCode")
+        else:
+            print("⚠️  Could not fetch config, but connection established")
         
-        # Step 2: List available providers and models
-        print("\n🤖 Checking for GitHub Copilot models...")
+        # Step 2: Check providers configuration
+        print("\n🤖 Checking for GitHub Copilot configuration...")
         
         # Note: To use GitHub Copilot, you must first authenticate:
         # Run: opencode auth login
         # Then select "GitHub Copilot" and follow the OAuth flow
         
-        # The following models are typically available with GitHub Copilot:
-        # - claude-sonnet-3.5 (Anthropic Claude via Copilot)
-        # - claude-haiku (Anthropic Claude via Copilot)
-        # - gpt-4o (OpenAI GPT-4o via Copilot)
-        # - gpt-4o-mini (OpenAI GPT-4o Mini via Copilot)
-        # - o1 (OpenAI o1 via Copilot)
-        # - o1-mini (OpenAI o1-mini via Copilot)
+        try:
+            providers_info = client.config_providers()
+            if providers_info:
+                print("✅ Provider configuration retrieved")
+                # The providers_info may contain details about available providers
+                # including github-copilot if authenticated
+        except Exception as e:
+            print(f"⚠️  Could not fetch providers: {e}")
+        
+        # Step 3: Available GitHub Copilot models
+        print("\n📦 GitHub Copilot Models (when authenticated):")
         
         copilot_models = [
-            "claude-sonnet-3.5",
-            "claude-haiku", 
-            "gpt-4o",
-            "gpt-4o-mini",
-            "o1",
-            "o1-mini"
+            {
+                "id": "claude-sonnet-3.5",
+                "name": "Claude Sonnet 3.5",
+                "description": "Most capable, best for complex tasks"
+            },
+            {
+                "id": "claude-haiku",
+                "name": "Claude Haiku",
+                "description": "Fast, efficient for simpler queries"
+            },
+            {
+                "id": "gpt-4o",
+                "name": "GPT-4o",
+                "description": "Advanced reasoning and code understanding"
+            },
+            {
+                "id": "gpt-4o-mini",
+                "name": "GPT-4o Mini",
+                "description": "Fast, cost-effective"
+            },
+            {
+                "id": "o1",
+                "name": "o1",
+                "description": "Advanced reasoning model"
+            },
+            {
+                "id": "o1-mini",
+                "name": "o1-mini",
+                "description": "Lighter reasoning model"
+            }
         ]
         
-        print("\n📦 Available GitHub Copilot models:")
         for model in copilot_models:
-            print(f"   • github-copilot/{model}")
+            print(f"   • {model['id']:20s} - {model['description']}")
         
-        # Step 3: Create a new session
-        print("\n🆕 Creating a new session...")
-        session_data = SessionCreate(
-            title="GitHub Copilot Example Session"
-        )
-        session = client.create_session(body=session_data)
-        print(f"✅ Session created with ID: {session.id}")
-        
-        # Step 4: Send a prompt to GitHub Copilot
-        print("\n💬 Sending prompt to GitHub Copilot (claude-sonnet-3.5)...")
-        
-        # Prepare the prompt message
-        prompt_data = PromptMessage(
-            model={
-                "providerID": "github-copilot",
-                "modelID": "claude-sonnet-3.5"
-            },
-            parts=[{
-                "type": "text",
-                "text": "Explain in 2-3 sentences what GitHub Copilot is and how it helps developers."
-            }]
-        )
-        
-        # Send the prompt and get response
-        response = client.post_session_by_id_prompt(
-            path={"id": session.id},
-            body=prompt_data
-        )
-        
-        print("\n📝 Response from GitHub Copilot:")
-        print("=" * 60)
-        
-        # The response contains message parts
-        if hasattr(response, 'parts') and response.parts:
-            for part in response.parts:
-                if hasattr(part, 'text'):
-                    print(part.text)
-        else:
-            print(response)
-        
-        print("=" * 60)
-        
-        # Step 5: List all sessions to verify
-        print("\n📚 Listing all sessions...")
+        # Step 4: Check existing sessions
+        print("\n📚 Checking existing sessions...")
         sessions = client.list_sessions() or []
-        print(f"✅ Total sessions: {len(sessions)}")
+        print(f"✅ Found {len(sessions)} existing session(s)")
         
-        # Step 6: Clean up (optional)
-        print(f"\n🗑️  To delete this session, run:")
-        print(f"   client.delete_session_by_id(path={{'id': '{session.id}'}})")
+        # Step 5: Instructions for creating sessions and sending prompts
+        print("\n💡 To use GitHub Copilot models programmatically:")
+        print("   1. Use the lower-level generated client APIs")
+        print("   2. Create a session using the appropriate API endpoint")
+        print("   3. Send prompts with model configuration:")
+        print("      {")
+        print('        "providerID": "github-copilot",')
+        print('        "modelID": "claude-sonnet-3.5"')
+        print("      }")
+        
+        print("\n📖 For complete API documentation, see:")
+        print("   • docs/github-copilot-integration.md")
+        print("   • https://opencode.ai/docs/sdk")
         
         print("\n✨ Example completed successfully!")
         

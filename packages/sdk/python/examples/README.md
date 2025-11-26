@@ -37,9 +37,30 @@ python examples/session_list.py
 **Output:**
 Prints the IDs of all sessions.
 
-### 4. GitHub Copilot Integration (`github_copilot_usage.py`)
+### 4. GitHub Copilot Info (`copilot_info.py`)
 
-**NEW** - Comprehensive example demonstrating GitHub Copilot integration with OpenCode.
+**NEW** - Quick reference guide for GitHub Copilot integration with OpenCode.
+
+**Usage:**
+```bash
+python examples/copilot_info.py
+```
+
+**What it shows:**
+- Connection test to OpenCode server
+- Setup instructions for GitHub Copilot
+- Available models and their descriptions
+- Subscription requirements
+- Basic Python SDK usage patterns
+- Links to documentation
+
+**Note:** This script works without authentication and provides setup guidance.
+
+---
+
+### 5. GitHub Copilot Usage (`github_copilot_usage.py`)
+
+**NEW** - Demonstrates GitHub Copilot workflow with OpenCode Python SDK.
 
 **Prerequisites:**
 - OpenCode server running (`opencode`)
