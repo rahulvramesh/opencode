@@ -269,11 +269,13 @@ opencode --port 4096
 
 ## Rate Limits and Quotas
 
-GitHub Copilot has usage limits that vary by subscription tier:
+GitHub Copilot has usage limits that vary by subscription tier. While exact limits are not publicly documented, typical behavior includes:
 
-- **Individual**: Subject to GitHub's fair use policy
-- **Business**: Higher limits, usage monitoring available
-- **Enterprise**: Custom limits based on agreement
+- **Individual**: Subject to GitHub's fair use policy (~500-1000 requests/month typical usage)
+- **Business**: Higher limits, usage monitoring available in admin dashboard
+- **Enterprise**: Custom limits based on agreement, dedicated capacity options
+
+For current rate limits, refer to [GitHub Copilot Documentation](https://docs.github.com/en/copilot/managing-copilot/managing-copilot-as-an-individual-subscriber/about-github-copilot-individual).
 
 When limits are reached, the API will return a 429 status code. Implement exponential backoff:
 

@@ -91,15 +91,15 @@ python examples/github_copilot_usage.py
 - Error handling and troubleshooting
 
 **Available Models:**
-- `claude-sonnet-3.5` - Anthropic Claude via Copilot
+
+⚠️  **Note:** Some models require manual enablement in [GitHub Copilot settings](https://github.com/settings/copilot/features) and may need Pro+ subscription.
+
+- `claude-sonnet-3.5` - Anthropic Claude via Copilot (requires Pro+)
 - `claude-haiku` - Anthropic Claude (lighter) via Copilot
 - `gpt-4o` - OpenAI GPT-4o via Copilot
 - `gpt-4o-mini` - OpenAI GPT-4o Mini via Copilot
-- `o1` - OpenAI o1 (reasoning) via Copilot
-- `o1-mini` - OpenAI o1-mini via Copilot
-
-**Note:** Some models require enablement in GitHub Copilot settings:
-https://github.com/settings/copilot/features
+- `o1` - OpenAI o1 (reasoning) via Copilot (requires Pro+)
+- `o1-mini` - OpenAI o1-mini via Copilot (requires Pro+)
 
 ## Running Examples
 
